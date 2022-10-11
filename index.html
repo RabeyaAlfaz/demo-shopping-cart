@@ -27,15 +27,15 @@
 
                      <div class="col-md-5 center-item">
                         <div class="input-group number-spinner">
-                           <button id="decrease-btn" class="btn btn-default">
+                           <button class="btn btn-default btn-minus">
                               <i id="field-iphone" class="fas fa-minus"></i>
                            </button>
-                           <input id="input-field1" type="number" min="0" class="form-control text-center" value="1">
-                           <button id="increase-btn1" class="btn btn-default btn-plus">
+                           <input type="number" min="0" class="form-control text-center input-field" value="1">
+                           <button class="btn btn-default btn-plus">
                               <i id="field-iphone-cover" class="fas fa-plus"></i>
                            </button>
                         </div>
-                        <h5>$ <span id="price-per-iphone">
+                        <h5>$ <span class="per-product-price">
                               1219
                            </span>
 
@@ -53,13 +53,14 @@
                      </div>
                      <div class="col-md-5 center-item">
                         <div class="input-group number-spinner">
-                           <button class="btn btn-default"><i class="fas fa-minus"></i></button>
-                           <input id="input-field2" type="number" min="0" class="form-control text-center" value="1">
-                           <button id="increase-btn2" class="btn btn-default btn-plus"><i
-                                 class="fas fa-plus"></i></button>
+                           <button class="btn btn-default btn-minus"><i class="fas fa-minus"></i></button>
+                           <input type="number" min="0" class="form-control text-cente input-field" value="1">
+                           <button class="btn btn-default btn-plus">
+                              <i class="fas fa-plus"></i>
+                           </button>
 
                         </div>
-                        <h5>$<span id="price-per-iphone-case">59</span></h5>
+                        <h5>$<span class="per-product-price">59</span></h5>
                         <img src="images/remove.png" alt="" class="remove-item">
                      </div>
                   </div>
@@ -75,7 +76,7 @@
                      </div>
 
                      <div class="col-md-4 status">
-                        <h5>$ <span id="sub-total">1,278</span> </h5>
+                        <h5>$ <span id="sub-total">0</span> </h5>
                         <h5>$0</h5>
                         <h5>$1,278</h5>
                      </div>
@@ -90,69 +91,52 @@
    </section>
 
    <script>
-      const iphoneinputField = document.getElementById('input-field1');
+      // selection of increase and decrease Buttons 
+      const increaseBtn = document.querySelectorAll('.btn-plus');
+      const decreaseBtn = document.querySelectorAll('.btn-minus');
+      const increaseBtnArr = [...increaseBtn];
+      const decreaseBtnArr = [...decreaseBtn];
 
-      // take input from input field 
-      function takeInputValueById(inputFieldId) {
-         const inputFieldValue = document.getElementById(inputFieldId);
-         let inputFieldValueNumber = parseFloat(iphoneinputField.value);
-         console.log(inputFieldValueNumber);
-         return inputFieldValueNumber;
-      }
+      // Input Field Value 
+      const inputField = document.querySelectorAll('.input-field');
+      const fieldArr = [...inputField];
 
-      // change field value 
-      let fieldvaluedisplay = takeInputValueById('input-field1');
-      // let fieldvaluedisplay1 = takeInputValueById('input-field2');
+      // select all product price value 
+      const perProductPrice = document.querySelectorAll('.per-product-price');
+      const perProductPriceArr = [...perProductPrice];
+      const productPrice = perProductPriceArr.map(x => parseFloat(x.innerText));
 
-      function fieldValueChange() {
-         fieldvaluedisplay++;
-         return fieldvaluedisplay;
-      }
+      // work of increase Buttons 
+      increaseBtnArr.forEach((btn, index) => {
+         btn.addEventListener('click', () => {
+            fieldArr[index].value++;
+            const price = productPrice[index] * (fieldArr[index].value);
+            perProductPriceArr[index].innerText = price;
+            subTotalNum+= parseFloat(perProductPrice[index].innerText);
+            subTotal.innerText = subTotalNum;
+         })
+      })
+      // calculate Sub Total 
+              
+      let subTotal = document.querySelector('#sub-total');
+      let subTotalNum = parseFloat(subTotal.innerText);
 
-      // set increase value in the field with id 
-      function setInputFieldValueById(inputField, value) {
-         let input = document.getElementById(inputField);
-         input.value = value;
-         return value;
-      }
-
-      // get each item price By id 
-      function getItemPriceById(itemPriceId) {
-         let itemPrice = document.getElementById(itemPriceId);
-         let itemPriceValueNumber = parseFloat(itemPrice.innerText);
-         return itemPriceValueNumber;
-      }
-
-      // sub Total Calculation
-      function getSubTotalValueByIds(inputFieldId, pricePerProductId) {
-         let fieldValueIncrease = fieldValueChange();
-         let noOfItem = setInputFieldValueById(inputFieldId, fieldValueIncrease);
-         let priceForEachItem = getItemPriceById(pricePerProductId);
-         let subTotal = noOfItem * priceForEachItem;
-         return subTotal;
-      }
-      let subTotal = document.getElementById('sub-total');
-      subTotal.innerText = 0;
-      let subTotalValue = parseFloat(subTotal.innerText);
-      console.log(subTotalValue);
-      // Update Value to the subTotal 
-
-
-      document.getElementById('increase-btn1').addEventListener('click', function () {
-         let value = getSubTotalValueByIds('input-field1', 'price-per-iphone');
-         value+=subTotalValue;
-         subTotal.innerText = value;
-         console.log(value);
+      // work of decrease Buttons 
+      decreaseBtnArr.forEach((btn, index) => {
+         btn.addEventListener('click', () => {
+            fieldArr[index].value--;
+            if (fieldArr[index].value <= 0) {
+               fieldArr[index].value = 0;
+            }
+            const price = productPrice[index] * (fieldArr[index].value);
+            perProductPriceArr[index].innerText = price;
+            subTotalNum-= parseFloat(perProductPrice[index].innerText);
+            subTotal.innerText = subTotalNum;
+         })
       })
 
-      document.getElementById('increase-btn2').addEventListener('click', function () {
-         takeInputValueById('input-field2');
-         let value = getSubTotalValueByIds('input-field2', 'price-per-iphone-case');
-         value+=subTotalValue;
-         subTotal.innerText = value;
-         console.log(value);
-       
-      })
+
+  
    </script>
 </body>
 
