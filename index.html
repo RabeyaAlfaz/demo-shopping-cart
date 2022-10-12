@@ -14,11 +14,11 @@
 <body>
 
    <section>
-      <div class="container">
+      <div class="container cart-section">
          <h2>My shopping cart</h2>
          <div class="cart">
             <div class="col-md-12 col-lg-10 mx-auto">
-               <div class="cart-item">
+               <div class="cart-item item-cart">
                   <div class="row">
                      <div class="col-md-7 center-item">
                         <img src="images/product-1.png" alt="">
@@ -40,12 +40,12 @@
                            </span>
 
                         </h5>
-                        <img src="images/remove.png" alt="" class="remove-item">
+                        <img src="images/remove.png" alt="" class="remove-item cross-icon">
                      </div>
                   </div>
                </div>
 
-               <div class="cart-item">
+               <div class="cart-item item-cart">
                   <div class="row">
                      <div class="col-md-7 center-item mx-auto">
                         <img src="images/product-2.png" alt="">
@@ -61,7 +61,7 @@
 
                         </div>
                         <h5>$<span class="per-product-price">59</span></h5>
-                        <img src="images/remove.png" alt="" class="remove-item">
+                        <img src="images/remove.png" alt="" class="remove-item cross-icon">
                      </div>
                   </div>
                </div>
@@ -77,13 +77,14 @@
 
                      <div class="col-md-4 status">
                         <h5>$ <span id="sub-total">0</span> </h5>
-                        <h5>$0</h5>
-                        <h5>$1,278</h5>
+                        <h5>$ <span id="discount">5</span> %</h5>
+                        <h5>$ <span id="total">0</span></h5>
                      </div>
                   </div>
                </div>
                <div class="col-md-12 pt-4 pb-4">
-                  <button type="button" class="btn btn-success check-out">Check Out</button>
+                  <button type="button" onclick="checkOutFromPage()" class="btn btn-success check-out">Check
+                     Out</button>
                </div>
             </div>
          </div>
@@ -101,10 +102,38 @@
       const inputField = document.querySelectorAll('.input-field');
       const fieldArr = [...inputField];
 
+      // Cart Cross icons 
+      const itemCart = document.querySelectorAll('.item-cart');
+      const itemCartArr = [...itemCart];
+
+      // Cart Cross icons 
+      const crossIcons = document.querySelectorAll('.cross-icon');
+      const crossIconsArr = [...crossIcons];
+
+      // taake the cross buttons and remove cart 
+      crossIconsArr.forEach((icon, index) => {
+         icon.addEventListener('click', () => {
+            itemCartArr[index].style.display = "none";
+         })
+      })
+
       // select all product price value 
       const perProductPrice = document.querySelectorAll('.per-product-price');
       const perProductPriceArr = [...perProductPrice];
       const productPrice = perProductPriceArr.map(x => parseFloat(x.innerText));
+
+      // calculate Sub Total 
+      let subTotal = document.querySelector('#sub-total');
+      let subTotalNum = parseFloat(subTotal.innerText);
+
+      // Count discount and add to total 
+      let discount = document.querySelector('#discount');
+      let discountNum = parseFloat(discount.innerText);
+
+
+      // Count discount and add to total 
+      let totalField = document.querySelector('#total');
+      let totalPrice = parseFloat(totalField.innerText);
 
       // work of increase Buttons 
       increaseBtnArr.forEach((btn, index) => {
@@ -112,14 +141,15 @@
             fieldArr[index].value++;
             const price = productPrice[index] * (fieldArr[index].value);
             perProductPriceArr[index].innerText = price;
-            subTotalNum+= parseFloat(perProductPrice[index].innerText);
+            subTotalNum += parseFloat(perProductPrice[index].innerText);
             subTotal.innerText = subTotalNum;
+            console.log(subTotalNum);
+            let total = subTotalNum - (subTotalNum * (discountNum / 100));
+            console.log(total);
+            totalPrice += total;
+            totalField.innerText = total;
          })
       })
-      // calculate Sub Total 
-              
-      let subTotal = document.querySelector('#sub-total');
-      let subTotalNum = parseFloat(subTotal.innerText);
 
       // work of decrease Buttons 
       decreaseBtnArr.forEach((btn, index) => {
@@ -130,13 +160,22 @@
             }
             const price = productPrice[index] * (fieldArr[index].value);
             perProductPriceArr[index].innerText = price;
-            subTotalNum-= parseFloat(perProductPrice[index].innerText);
+            subTotalNum -= parseFloat(perProductPrice[index].innerText);
             subTotal.innerText = subTotalNum;
+
+            let total = subTotalNum - (subTotalNum * (discountNum / 100));
+            console.log(total);
+            totalPrice += total;
+            totalField.innerText = total;
          })
       })
 
 
-  
+      // work of checkout buttton
+
+      function checkOutFromPage() {
+        document.querySelector('.cart-section').style.display = "none";
+      }
    </script>
 </body>
 
